@@ -10,6 +10,11 @@
       "StackName": "amplify-aidea-dev-143238",
       "StackId": "arn:aws:cloudformation:us-east-1:474215544787:stack/amplify-aidea-dev-143238/fcceedd0-e6cc-11ed-a3c1-0e63e298f1c9",
       "AmplifyAppId": "d3lsjsz7fet1lg"
+    },
+    "categories": {
+      "auth": {
+        "aidea8dd9dd6b": {}
+      }
     }
   }
 }
