@@ -44,6 +44,8 @@ const AideaForm = ({ title, onSubmit }: AideaFormType) => {
 
   const handleOnSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    if (!userInput) return;
     setUserInput("");
     onSubmit(userInput);
   };
