@@ -8,19 +8,6 @@ import ErrorType from "@models/Error";
 const AI_API_URL = process.env.NEXT_PUBLIC_AI_API_URL || "";
 const aiService = new AiService(AI_API_URL, ErrorType);
 
-function getRowAnswer({
-  question,
-  answer,
-}: {
-  question: string;
-  answer: string;
-}) {
-  return [
-    `Business Candidate: ${question}`,
-    `It's a business proposal?: ${answer}`,
-  ];
-}
-
 const contactAI = async (prompt: string) => {
   const response = await aiService.getAiResponse(prompt);
   return response;
@@ -30,27 +17,38 @@ function AideaPanel() {
   const [title, setTitle] = useState<string>(
     "Let's Discuss, tell me your idea"
   );
-  const [userData, setUserData] = useState<string[]>([]);
+  const [userData, setUserData] = useState<any>([]);
 
   const handleOnSubmit = async (data: string) => {
     const response = await contactAI(data);
     // setTitle(`Follow up question #: ${userData.length + 1}`);
     const booleanResponse =
       response.includes("True") || response.includes("true");
-    const rowAnswer = getRowAnswer({
-      question: data,
-      answer: String(booleanResponse),
-    });
-    setUserData((prev) => [...prev, ...rowAnswer]);
+
+    setUserData((prev: any) => [
+      ...prev,
+      {
+        question: data,
+        answer: response,
+      },
+    ]);
   };
 
   return (
     <>
       <AideaForm title={title} onSubmit={handleOnSubmit} />
       <div className="mt-8">
-        {userData.map((prompt, index) => (
-          <p key={index}>{prompt}</p>
-        ))}
+        {userData.map(
+          (prompt: { question: string; answer: string }, index: number) => (
+            <div
+              key={index}
+              className="bg-gray-900 dark:bg-gray-800 rounded-lg shadow-md p-6 mb-4"
+            >
+              <div className="text-xl font-bold">{prompt.question}</div>
+              <div className="text-lg">{prompt.answer}</div>
+            </div>
+          )
+        )}
       </div>
     </>
   );

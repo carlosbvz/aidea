@@ -54,13 +54,16 @@ const AideaForm = ({ title, onSubmit }: AideaFormType) => {
     <form>
       <h1 className="text-3xl font-bold mb-5">{title}</h1>
       <TextInput name="title" value={userInput} onChange={handleOnChange} />
-      <button
-        type="submit"
-        className="bg-green-800 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg focus:outline-none focus:shadow-outline mt-2"
-        onClick={handleOnSubmit}
-      >
-        Submit
-      </button>
+
+      <div className="flex flex-row justify-end items-end mt-2">
+        <button
+          type="submit"
+          className="bg-green-800 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg focus:outline-none focus:shadow-outline mt-2"
+          onClick={handleOnSubmit}
+        >
+          Submit
+        </button>
+      </div>
     </form>
   );
 };

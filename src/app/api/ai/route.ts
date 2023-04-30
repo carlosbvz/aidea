@@ -4,13 +4,10 @@ const OPENAI_BASE_URL = process.env.OPENAI_BASE_URL;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_MODEL = process.env.OPENAI_MODEL;
 
-const promptsCandidates = [
-  `Answer using ONLY a single word "true" or "false": 
-  Does this sentence describe a potential bussiness idea?:`,
-];
+const promptsCandidates = `Does the following sentence describe a bussiness idea?: /n`;
 
 function getNextPrompt(originalPrompt: string) {
-  return promptsCandidates[0] + originalPrompt;
+  return promptsCandidates + originalPrompt;
 }
 
 export async function POST(req: Request) {
