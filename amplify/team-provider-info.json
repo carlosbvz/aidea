@@ -19,5 +19,23 @@
         "aidea": {}
       }
     }
+  },
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-aidea-prod-94003-authRole",
+      "UnauthRoleArn": "arn:aws:iam::474215544787:role/amplify-aidea-prod-94003-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::474215544787:role/amplify-aidea-prod-94003-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-aidea-prod-94003-deployment",
+      "UnauthRoleName": "amplify-aidea-prod-94003-unauthRole",
+      "StackName": "amplify-aidea-prod-94003",
+      "StackId": "arn:aws:cloudformation:us-east-1:474215544787:stack/amplify-aidea-prod-94003/71a37850-e836-11ed-8ad3-12e46d917fb5",
+      "AmplifyAppId": "d3lsjsz7fet1lg"
+    },
+    "categories": {
+      "auth": {
+        "aidea8dd9dd6b": {}
+      }
+    }
   }
 }
