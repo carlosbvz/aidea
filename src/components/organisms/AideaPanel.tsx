@@ -22,8 +22,6 @@ function AideaPanel() {
   const handleOnSubmit = async (data: string) => {
     const response = await contactAI(data);
     // setTitle(`Follow up question #: ${userData.length + 1}`);
-    const booleanResponse =
-      response.includes("True") || response.includes("true");
 
     setUserData((prev: any) => [
       ...prev,

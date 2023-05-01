@@ -4,18 +4,18 @@ const OPENAI_BASE_URL = process.env.OPENAI_BASE_URL;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_MODEL = process.env.OPENAI_MODEL;
 
-const promptsCandidates = `Does the following sentence describe a bussiness idea?: /n`;
+const promptsCandidates = `Does the following sentence describe a bussiness idea?: `;
 
 function getNextPrompt(originalPrompt: string) {
   return promptsCandidates + originalPrompt;
 }
 
 export async function POST(req: Request) {
-  return NextResponse.json({ json: req.json() });
-  // const res = await req.json();
-  // const originalPrompt = res.data;
+  const res = await req.json();
+  const originalPrompt = res.data;
+  const prompt = getNextPrompt(originalPrompt);
 
-  // const prompt = getNextPrompt(originalPrompt);
+  return NextResponse.json({ json: prompt });
 
   // const payload = {
   //   model: OPENAI_MODEL,
