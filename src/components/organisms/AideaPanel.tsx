@@ -15,7 +15,7 @@ const contactAI = async (prompt: string) => {
 
 function AideaPanel() {
   const [title, setTitle] = useState<string>(
-    "Let's Discuss, tell me your idea"
+    "Let's Discuss, tell me your ideas"
   );
   const [userData, setUserData] = useState<any>([]);
 
