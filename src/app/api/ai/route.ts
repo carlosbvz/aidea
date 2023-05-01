@@ -38,3 +38,7 @@ export async function POST(req: Request) {
   const json = await response.json();
   return NextResponse.json({ json });
 }
+
+export async function GET() {
+  return NextResponse.json({ message: "Hello from the API!" });
+}
