@@ -5,12 +5,12 @@ import TextArea from "@molecules/TextArea";
 
 interface AideaFormType {
   title: string;
+  isLoading: boolean;
   onSubmit: (data: string) => void;
 }
 
-const AideaForm = ({ title, onSubmit }: AideaFormType) => {
+const AideaForm = ({ title, onSubmit, isLoading }: AideaFormType) => {
   const [userInput, setUserInput] = useState<string>("");
-  const [isLoding, setIsLoading] = useState<boolean>(false);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setUserInput(e.target.value);
@@ -24,17 +24,18 @@ const AideaForm = ({ title, onSubmit }: AideaFormType) => {
     onSubmit(userInput);
   };
 
-  const btnClassName = isLoding
-    ? "bg-green-800 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg focus:outline-none focus:shadow-outline mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
-    : "bg-green-800 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg focus:outline-none focus:shadow-outline mt-2";
-
   return (
     <form>
       <h1 className="text-3xl font-bold mb-5">{title}</h1>
       <TextArea name="title" value={userInput} onChange={handleOnChange} />
 
       <div className="flex flex-row justify-end items-end mt-2">
-        <button type="submit" className={btnClassName} onClick={handleOnSubmit}>
+        <button
+          type="submit"
+          className={`bg-green-800 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg focus:outline-none focus:shadow-outline mt-2 disabled:opacity-50 disabled:cursor-not-allowed `}
+          disabled={isLoading}
+          onClick={handleOnSubmit}
+        >
           Submit
         </button>
       </div>

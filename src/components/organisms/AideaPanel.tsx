@@ -18,8 +18,10 @@ function AideaPanel() {
     "Let's Discuss, tell me your ideas"
   );
   const [userData, setUserData] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleOnSubmit = async (data: string) => {
+    setIsLoading(true);
     const response = await contactAI(data);
     // setTitle(`Follow up question #: ${userData.length + 1}`);
 
@@ -30,11 +32,16 @@ function AideaPanel() {
         answer: response,
       },
     ]);
+    setIsLoading(false);
   };
 
   return (
     <>
-      <AideaForm title={title} onSubmit={handleOnSubmit} />
+      <AideaForm
+        title={title}
+        onSubmit={handleOnSubmit}
+        isLoading={isLoading}
+      />
       <div className="mt-8">
         {userData.map(
           (prompt: { question: string; answer: string }, index: number) => (
