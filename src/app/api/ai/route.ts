@@ -36,10 +36,8 @@ export async function POST(req: Request) {
       body: JSON.stringify(payload),
     });
 
-    return NextResponse.json({ json: prompt + OPENAI_BASE_URL });
-
-    // const json = await response.json();
-    // return NextResponse.json({ json });
+    const json = await response.json();
+    return NextResponse.json({ json });
   } catch (error) {
     NextResponse.json({
       json: {
