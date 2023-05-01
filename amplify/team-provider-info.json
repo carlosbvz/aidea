@@ -35,6 +35,9 @@
     "categories": {
       "auth": {
         "aidea8dd9dd6b": {}
+      },
+      "api": {
+        "aidea": {}
       }
     }
   }

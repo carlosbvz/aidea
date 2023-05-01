@@ -24,23 +24,28 @@ function AideaPanel() {
     "Let's Discuss, tell me your ideas"
   );
   const [userData, setUserData] = useState<any>([]);
+  const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchIdeas = async () => {
-      const ideas = await DataStore.query(Idea);
-      const ideasData = ideas.map((idea) => JSON.parse(idea.content));
+    const fetchData = async () => {
+      const promises = [authService.getUser(), DataStore.query(Idea)];
+      const [loadedUser, ideas] = await Promise.all(promises);
+
+      const ideasData = ideas
+        .filter((idea: any) => idea.owner === loadedUser.attributes.sub)
+        .map((idea: any) => JSON.parse(idea.content));
       setUserData(ideasData);
+      setUser(user);
     };
 
-    fetchIdeas();
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleOnSubmit = async (data: string) => {
     setIsLoading(true);
-
-    const promises = [contactAI(data), authService.getUser()];
-    const [response, user] = await Promise.all(promises);
+    const response = await contactAI(data);
 
     const content = {
       question: data,
