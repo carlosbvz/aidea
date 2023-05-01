@@ -26,16 +26,16 @@ export async function POST(req: Request) {
     n: 1,
   };
 
-  const response = await fetch(`${OPENAI_BASE_URL}/completions`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${OPENAI_API_KEY}`,
-    },
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+  // const response = await fetch(`${OPENAI_BASE_URL}/completions`, {
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     Authorization: `Bearer ${OPENAI_API_KEY}`,
+  //   },
+  //   method: "POST",
+  //   body: JSON.stringify(payload),
+  // });
 
-  return NextResponse.json({ json: prompt });
+  return NextResponse.json({ json: prompt + OPENAI_BASE_URL });
 
   // const json = await response.json();
   // return NextResponse.json({ json });

@@ -1,34 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-interface InputType {
-  name: string;
-  value: string;
-  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-}
-
-const TextInput = ({ name, value, onChange }: InputType) => {
-  const handleKeyDown = (event: any) => {
-    if (event.key === "Enter" && event.shiftKey) {
-      event.preventDefault();
-      event.target.style.height = `${event.target.scrollHeight}px`;
-    }
-  };
-
-  return (
-    <div className="flex flex-col">
-      <textarea
-        className="form-input border rounded px-3 py-2 resize-none h-auto"
-        name={name}
-        value={value}
-        onChange={onChange}
-        onKeyDown={handleKeyDown}
-        rows={7}
-      />
-    </div>
-  );
-};
+import TextArea from "@molecules/TextArea";
 
 interface AideaFormType {
   title: string;
@@ -53,7 +26,7 @@ const AideaForm = ({ title, onSubmit }: AideaFormType) => {
   return (
     <form>
       <h1 className="text-3xl font-bold mb-5">{title}</h1>
-      <TextInput name="title" value={userInput} onChange={handleOnChange} />
+      <TextArea name="title" value={userInput} onChange={handleOnChange} />
 
       <div className="flex flex-row justify-end items-end mt-2">
         <button

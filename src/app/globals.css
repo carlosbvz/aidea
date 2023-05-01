@@ -12,6 +12,11 @@ body {
   color: rgb(var(--foreground-rgb));
 }
 
+textarea:focus,
+input:focus {
+  outline: none;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
