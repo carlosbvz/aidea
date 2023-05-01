@@ -36,7 +36,7 @@ function AideaPanel() {
         .filter((idea: any) => idea.owner === loadedUser.attributes.sub)
         .map((idea: any) => JSON.parse(idea.content));
       setUserData(ideasData);
-      setUser(user);
+      setUser(loadedUser);
     };
 
     fetchData();
@@ -44,24 +44,29 @@ function AideaPanel() {
   }, []);
 
   const handleOnSubmit = async (data: string) => {
-    setIsLoading(true);
-    const response = await contactAI(data);
+    try {
+      setIsLoading(true);
+      const response = await contactAI(data);
 
-    const content = {
-      question: data,
-      answer: response,
-    };
+      const content = {
+        question: data,
+        answer: response,
+      };
 
-    await DataStore.save(
-      new Idea({
-        content: JSON.stringify(content),
-        owner: user.id,
-        user: user,
-      })
-    );
+      await DataStore.save(
+        new Idea({
+          content: JSON.stringify(content),
+          owner: user.id,
+          user: user,
+        })
+      );
 
-    setUserData((prev: any) => [...prev, content]);
-    setIsLoading(false);
+      setUserData((prev: any) => [...prev, content]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
