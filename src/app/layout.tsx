@@ -16,9 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={lato.className}>
-        <main className="container max-w-screen-xxl mx-auto px-4 my-8">
-          {children}
-        </main>
+        <main>{children}</main>
       </body>
     </html>
   );

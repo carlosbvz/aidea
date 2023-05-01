@@ -46,10 +46,3 @@ export async function POST(req: Request) {
     });
   }
 }
-
-export async function GET() {
-  return NextResponse.json({
-    message:
-      "Hello from the API!" + OPENAI_BASE_URL + OPENAI_API_KEY + OPENAI_MODEL,
-  });
-}

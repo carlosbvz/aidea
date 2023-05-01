@@ -1,3 +1,5 @@
+"use client";
+
 import AideaPanel from "@organisms/AideaPanel";
 
 function Home() {

@@ -50,7 +50,9 @@ function AideaPanel() {
               className="bg-gray-900 dark:bg-gray-800 rounded-lg shadow-md p-6 mb-4"
             >
               <div className="text-xl font-bold">{prompt.question}</div>
-              <div className="text-lg">{prompt.answer}</div>
+              <div className="text-lg rounded-lg bg-gray-700 mt-3 p-3">
+                {prompt.answer}
+              </div>
             </div>
           )
         )}

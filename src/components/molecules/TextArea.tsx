@@ -15,7 +15,7 @@ const TextArea = ({ name, value, onChange }: TextAreaType) => {
   return (
     <div className="flex flex-col">
       <textarea
-        className="form-input  rounded-lg px-3 py-2 resize-none h-auto"
+        className="form-input  rounded-lg px-3 py-2 resize-none h-auto  dark:bg-gray-700"
         name={name}
         value={value}
         onChange={onChange}
