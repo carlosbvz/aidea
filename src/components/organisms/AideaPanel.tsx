@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import AideaForm from "@molecules/AideaForm";
+import AideaForm from "@organisms/AideaForm";
 import { useState } from "react";
 import AiService from "@/services/AiService";
 import ErrorType from "@models/Error";
 import AuthService from "@/services/AuthService";
 import { DataStore } from "@aws-amplify/datastore";
+import AideaSideBar from "@organisms/AideaSideBar";
 import { Idea } from "../../models";
 
 const authService = new AuthService();
@@ -20,21 +21,21 @@ const contactAI = async (prompt: string) => {
 };
 
 function AideaPanel() {
-  const [title, setTitle] = useState<string>(
-    "Let's Discuss, tell me your ideas"
-  );
+  const [title, setTitle] = useState<string>("");
   const [userData, setUserData] = useState<any>([]);
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // Loading Data
   useEffect(() => {
     const fetchData = async () => {
       const promises = [authService.getUser(), DataStore.query(Idea)];
       const [loadedUser, ideas] = await Promise.all(promises);
 
       const ideasData = ideas
-        .filter((idea: any) => idea.owner === loadedUser.attributes.sub)
-        .map((idea: any) => JSON.parse(idea.content));
+        // .filter((idea: any) => idea.owner !== loadedUser.attributes.sub)
+        .map((idea: any) => JSON.parse(idea.content))
+        .reverse();
       setUserData(ideasData);
       setUser(loadedUser);
     };
@@ -43,6 +44,7 @@ function AideaPanel() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Fetching Data
   const handleOnSubmit = async (data: string) => {
     try {
       setIsLoading(true);
@@ -61,7 +63,7 @@ function AideaPanel() {
         })
       );
 
-      setUserData((prev: any) => [...prev, content]);
+      setUserData((prev: any) => [content, ...prev]);
     } catch (error) {
       console.error(error);
     } finally {
@@ -71,25 +73,17 @@ function AideaPanel() {
 
   return (
     <>
-      <AideaForm
-        title={title}
-        onSubmit={handleOnSubmit}
-        isLoading={isLoading}
-      />
-      <div className="mt-8">
-        {userData.map(
-          (prompt: { question: string; answer: string }, index: number) => (
-            <div
-              key={index}
-              className="bg-gray-900 dark:bg-gray-800 rounded-lg shadow-md p-6 mb-4"
-            >
-              <div className="text-xl font-bold">{prompt.question}</div>
-              <div className="text-lg rounded-lg bg-gray-700 mt-3 p-3">
-                {prompt.answer}
-              </div>
-            </div>
-          )
-        )}
+      <div className="grid grid-cols-5 gap-4">
+        <div className="col-span-1 ">
+          <AideaSideBar data={userData} />
+        </div>
+        <div className="col-span-4">
+          <AideaForm
+            title={title}
+            onSubmit={handleOnSubmit}
+            isLoading={isLoading}
+          />
+        </div>
       </div>
     </>
   );

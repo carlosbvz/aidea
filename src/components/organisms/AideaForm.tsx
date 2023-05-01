@@ -26,8 +26,13 @@ const AideaForm = ({ title, onSubmit, isLoading }: AideaFormType) => {
 
   return (
     <form>
-      <h1 className="text-3xl font-bold mb-5">{title}</h1>
-      <TextArea name="title" value={userInput} onChange={handleOnChange} />
+      <h1 className="text-3xl font-bold">{title}</h1>
+      <TextArea
+        name="title"
+        value={userInput}
+        onChange={handleOnChange}
+        onSubmit={handleOnSubmit}
+      />
 
       <div className="flex flex-row justify-end items-end mt-2">
         <button
