@@ -29,8 +29,11 @@ class AuthService {
 
   public async isAuthenticated(): Promise<boolean> {
     const user = await Auth.currentUserInfo();
-    console.log("user", user);
     return !!user?.id;
+  }
+
+  public async getUser(): Promise<any> {
+    return await Auth.currentAuthenticatedUser();
   }
 }
 

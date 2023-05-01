@@ -1,9 +1,15 @@
 "use client";
 
+import { useEffect } from "react";
 import AideaForm from "@molecules/AideaForm";
 import { useState } from "react";
 import AiService from "@/services/AiService";
 import ErrorType from "@models/Error";
+import AuthService from "@/services/AuthService";
+import { DataStore } from "@aws-amplify/datastore";
+import { Idea } from "../../models";
+
+const authService = new AuthService();
 
 const AI_API_URL = process.env.NEXT_PUBLIC_AI_API_URL || "";
 const aiService = new AiService(AI_API_URL, ErrorType);
@@ -20,18 +26,36 @@ function AideaPanel() {
   const [userData, setUserData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  useEffect(() => {
+    const fetchIdeas = async () => {
+      const ideas = await DataStore.query(Idea);
+      const ideasData = ideas.map((idea) => JSON.parse(idea.content));
+      setUserData(ideasData);
+    };
+
+    fetchIdeas();
+  }, []);
+
   const handleOnSubmit = async (data: string) => {
     setIsLoading(true);
-    const response = await contactAI(data);
-    // setTitle(`Follow up question #: ${userData.length + 1}`);
 
-    setUserData((prev: any) => [
-      ...prev,
-      {
-        question: data,
-        answer: response,
-      },
-    ]);
+    const promises = [contactAI(data), authService.getUser()];
+    const [response, user] = await Promise.all(promises);
+
+    const content = {
+      question: data,
+      answer: response,
+    };
+
+    await DataStore.save(
+      new Idea({
+        content: JSON.stringify(content),
+        owner: user.id,
+        user: user,
+      })
+    );
+
+    setUserData((prev: any) => [...prev, content]);
     setIsLoading(false);
   };
 
