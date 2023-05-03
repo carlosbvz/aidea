@@ -5,8 +5,13 @@ type Props = {
   isActive?: boolean;
 };
 
+const maxTextLength = 25;
+
 export default function SideBarItem({ text, isActive }: Props) {
-  // bg-gray-900 dark:bg-gray-800 rounded-lg shadow-md
+  const truncatedText =
+    text?.length > maxTextLength
+      ? text.substring(0, maxTextLength) + "..."
+      : text;
   const baseClasses =
     "p-6 mb-4 rounded-lg hover:bg-gray-600 hover:shadow-md hover:dark:bg-gray-600 cursor-pointer";
   const activeClasses =
@@ -15,7 +20,7 @@ export default function SideBarItem({ text, isActive }: Props) {
 
   return (
     <div className={classes}>
-      <div className="text-sm font-bold">{`-> ${text}`}</div>
+      <div className="text-sm font-bold">{`-> ${truncatedText}`}</div>
     </div>
   );
 }

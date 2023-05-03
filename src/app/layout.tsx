@@ -4,7 +4,7 @@ import { Lato as latoFont } from "next/font/google";
 const lato = latoFont({ weight: "400", subsets: ["latin"] });
 
 export const metadata = {
-  title: "AiDea",
+  title: "AiDea | v1.1.0",
   description: "Creating a better world with AI",
 };
 

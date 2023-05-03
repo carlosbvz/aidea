@@ -1,18 +1,27 @@
 import React from "react";
 import SideBarItem from "@atoms/SideBarItem";
 
+type ItemType = {
+  question: string;
+  isActive?: boolean;
+};
 type Props = {
   data: any;
+  onChange?: (item: any) => void;
 };
 
-export default function AideaSideBar({ data }: Props) {
+export default function AideaSideBar({ data, onChange }: Props) {
+  const handleOnChange = (item: any) => {
+    onChange?.(item);
+  };
+
   return (
     <div>
-      {data.map(
-        (prompt: { question: string; answer: string }, index: number) => (
-          <SideBarItem key={index} text={prompt.question} isActive={true} />
-        )
-      )}
+      {data.map((item: ItemType, index: number) => (
+        <div key={index} onClick={() => handleOnChange(item)}>
+          <SideBarItem text={item.question} isActive={item.isActive} />
+        </div>
+      ))}
     </div>
   );
 }
