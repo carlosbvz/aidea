@@ -9,7 +9,7 @@ type Props = {};
 
 const navStyles = {
   display: "flex",
-  justifyContent: "flex-end",
+  justifyContent: "space-between",
   alignItems: "center",
   height: "50px",
   padding: "0 20px",
@@ -35,6 +35,7 @@ export default function Nav({}: Props) {
 
   return (
     <div style={navStyles}>
+      <h1 className="text-4xl font-bold ">AiDea</h1>
       <button
         onClick={handleSignOut}
         className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow-lg focus:outline-none focus:shadow-outline"

@@ -16,7 +16,12 @@ export default function AideaSideBar({ data, onChange }: Props) {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        height: "90vh",
+        overflow: "scroll",
+      }}
+    >
       {data.map((item: ItemType, index: number) => (
         <div key={index} onClick={() => handleOnChange(item)}>
           <SideBarItem text={item.question} isActive={item.isActive} />

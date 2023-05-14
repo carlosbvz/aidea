@@ -104,32 +104,35 @@ function AideaPanel() {
   };
 
   return (
-    <>
+    <div>
       <div className="grid grid-cols-5 gap-4">
         <div className="col-span-1 ">
           <AideaSideBar data={data} onChange={handleOnItemChange} />
         </div>
         <div className="col-span-4">
-          <div>
-            <AideaForm
-              title={title}
-              onSubmit={handleOnSubmit}
-              isLoading={isLoading}
-            />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              height: "90vh",
+              justifyContent: "space-between",
+            }}
+          >
             {displayData && (
-              <>
+              <div>
                 <div className="mt-4 text-lg font-bold">
                   {displayData.question}
                 </div>
                 <div className="mt-4 text-lg font-bold">
                   {displayData.answer}
                 </div>
-              </>
+              </div>
             )}
+            <AideaForm onSubmit={handleOnSubmit} isLoading={isLoading} />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
