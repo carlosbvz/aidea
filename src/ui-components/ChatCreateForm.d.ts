@@ -12,25 +12,25 @@ export declare type ValidationResponse = {
     errorMessage?: string;
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
-export declare type IdeaCreateFormInputValues = {
-    content?: string;
+export declare type ChatCreateFormInputValues = {
+    messages?: string;
 };
-export declare type IdeaCreateFormValidationValues = {
-    content?: ValidationFunction<string>;
+export declare type ChatCreateFormValidationValues = {
+    messages?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
-export declare type IdeaCreateFormOverridesProps = {
-    IdeaCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
-    content?: PrimitiveOverrideProps<TextFieldProps>;
+export declare type ChatCreateFormOverridesProps = {
+    ChatCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    messages?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
-export declare type IdeaCreateFormProps = React.PropsWithChildren<{
-    overrides?: IdeaCreateFormOverridesProps | undefined | null;
+export declare type ChatCreateFormProps = React.PropsWithChildren<{
+    overrides?: ChatCreateFormOverridesProps | undefined | null;
 } & {
     clearOnSuccess?: boolean;
-    onSubmit?: (fields: IdeaCreateFormInputValues) => IdeaCreateFormInputValues;
-    onSuccess?: (fields: IdeaCreateFormInputValues) => void;
-    onError?: (fields: IdeaCreateFormInputValues, errorMessage: string) => void;
-    onChange?: (fields: IdeaCreateFormInputValues) => IdeaCreateFormInputValues;
-    onValidate?: IdeaCreateFormValidationValues;
+    onSubmit?: (fields: ChatCreateFormInputValues) => ChatCreateFormInputValues;
+    onSuccess?: (fields: ChatCreateFormInputValues) => void;
+    onError?: (fields: ChatCreateFormInputValues, errorMessage: string) => void;
+    onChange?: (fields: ChatCreateFormInputValues) => ChatCreateFormInputValues;
+    onValidate?: ChatCreateFormValidationValues;
 } & React.CSSProperties>;
-export default function IdeaCreateForm(props: IdeaCreateFormProps): React.ReactElement;
+export default function ChatCreateForm(props: ChatCreateFormProps): React.ReactElement;

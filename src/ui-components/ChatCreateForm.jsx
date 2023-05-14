@@ -8,13 +8,12 @@
 import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { Idea } from "../models";
+import { Chat } from "../models";
 import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
-export default function IdeaUpdateForm(props) {
+export default function ChatCreateForm(props) {
   const {
-    id: idProp,
-    idea: ideaModelProp,
+    clearOnSuccess = true,
     onSuccess,
     onError,
     onSubmit,
@@ -24,30 +23,16 @@ export default function IdeaUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    content: "",
+    messages: "",
   };
-  const [content, setContent] = React.useState(initialValues.content);
+  const [messages, setMessages] = React.useState(initialValues.messages);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = ideaRecord
-      ? { ...initialValues, ...ideaRecord }
-      : initialValues;
-    setContent(cleanValues.content);
+    setMessages(initialValues.messages);
     setErrors({});
   };
-  const [ideaRecord, setIdeaRecord] = React.useState(ideaModelProp);
-  React.useEffect(() => {
-    const queryData = async () => {
-      const record = idProp
-        ? await DataStore.query(Idea, idProp)
-        : ideaModelProp;
-      setIdeaRecord(record);
-    };
-    queryData();
-  }, [idProp, ideaModelProp]);
-  React.useEffect(resetStateValues, [ideaRecord]);
   const validations = {
-    content: [{ type: "Required" }],
+    messages: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -75,7 +60,7 @@ export default function IdeaUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          content,
+          messages,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -105,13 +90,12 @@ export default function IdeaUpdateForm(props) {
               modelFields[key] = undefined;
             }
           });
-          await DataStore.save(
-            Idea.copyOf(ideaRecord, (updated) => {
-              Object.assign(updated, modelFields);
-            })
-          );
+          await DataStore.save(new Chat(modelFields));
           if (onSuccess) {
             onSuccess(modelFields);
+          }
+          if (clearOnSuccess) {
+            resetStateValues();
           }
         } catch (err) {
           if (onError) {
@@ -119,46 +103,45 @@ export default function IdeaUpdateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "IdeaUpdateForm")}
+      {...getOverrideProps(overrides, "ChatCreateForm")}
       {...rest}
     >
       <TextField
-        label="Content"
+        label="Messages"
         isRequired={true}
         isReadOnly={false}
-        value={content}
+        value={messages}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              content: value,
+              messages: value,
             };
             const result = onChange(modelFields);
-            value = result?.content ?? value;
+            value = result?.messages ?? value;
           }
-          if (errors.content?.hasError) {
-            runValidationTasks("content", value);
+          if (errors.messages?.hasError) {
+            runValidationTasks("messages", value);
           }
-          setContent(value);
+          setMessages(value);
         }}
-        onBlur={() => runValidationTasks("content", content)}
-        errorMessage={errors.content?.errorMessage}
-        hasError={errors.content?.hasError}
-        {...getOverrideProps(overrides, "content")}
+        onBlur={() => runValidationTasks("messages", messages)}
+        errorMessage={errors.messages?.errorMessage}
+        hasError={errors.messages?.hasError}
+        {...getOverrideProps(overrides, "messages")}
       ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
       >
         <Button
-          children="Reset"
+          children="Clear"
           type="reset"
           onClick={(event) => {
             event.preventDefault();
             resetStateValues();
           }}
-          isDisabled={!(idProp || ideaModelProp)}
-          {...getOverrideProps(overrides, "ResetButton")}
+          {...getOverrideProps(overrides, "ClearButton")}
         ></Button>
         <Flex
           gap="15px"
@@ -168,10 +151,7 @@ export default function IdeaUpdateForm(props) {
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={
-              !(idProp || ideaModelProp) ||
-              Object.values(errors).some((e) => e?.hasError)
-            }
+            isDisabled={Object.values(errors).some((e) => e?.hasError)}
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

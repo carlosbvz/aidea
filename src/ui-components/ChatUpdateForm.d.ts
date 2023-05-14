@@ -7,32 +7,32 @@
 import * as React from "react";
 import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
-import { Idea } from "../models";
+import { Chat } from "../models";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
-export declare type IdeaUpdateFormInputValues = {
-    content?: string;
+export declare type ChatUpdateFormInputValues = {
+    messages?: string;
 };
-export declare type IdeaUpdateFormValidationValues = {
-    content?: ValidationFunction<string>;
+export declare type ChatUpdateFormValidationValues = {
+    messages?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
-export declare type IdeaUpdateFormOverridesProps = {
-    IdeaUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
-    content?: PrimitiveOverrideProps<TextFieldProps>;
+export declare type ChatUpdateFormOverridesProps = {
+    ChatUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    messages?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
-export declare type IdeaUpdateFormProps = React.PropsWithChildren<{
-    overrides?: IdeaUpdateFormOverridesProps | undefined | null;
+export declare type ChatUpdateFormProps = React.PropsWithChildren<{
+    overrides?: ChatUpdateFormOverridesProps | undefined | null;
 } & {
     id?: string;
-    idea?: Idea;
-    onSubmit?: (fields: IdeaUpdateFormInputValues) => IdeaUpdateFormInputValues;
-    onSuccess?: (fields: IdeaUpdateFormInputValues) => void;
-    onError?: (fields: IdeaUpdateFormInputValues, errorMessage: string) => void;
-    onChange?: (fields: IdeaUpdateFormInputValues) => IdeaUpdateFormInputValues;
-    onValidate?: IdeaUpdateFormValidationValues;
+    chat?: Chat;
+    onSubmit?: (fields: ChatUpdateFormInputValues) => ChatUpdateFormInputValues;
+    onSuccess?: (fields: ChatUpdateFormInputValues) => void;
+    onError?: (fields: ChatUpdateFormInputValues, errorMessage: string) => void;
+    onChange?: (fields: ChatUpdateFormInputValues) => ChatUpdateFormInputValues;
+    onValidate?: ChatUpdateFormValidationValues;
 } & React.CSSProperties>;
-export default function IdeaUpdateForm(props: IdeaUpdateFormProps): React.ReactElement;
+export default function ChatUpdateForm(props: ChatUpdateFormProps): React.ReactElement;

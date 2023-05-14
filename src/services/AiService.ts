@@ -30,12 +30,11 @@ class AiService {
     }
 
     const responseJson = await response.json();
-    const answer = responseJson?.json;
+    const answer = responseJson?.response || "";
 
     if (answer.error) throw new Error(this.errorType.InternalServerError);
 
-    const answerText = answer?.choices?.[0]?.text;
-    return answerText;
+    return answer;
   }
 }
 

@@ -2,15 +2,14 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser(
-    $filter: ModelSubscriptionUserFilterInput
+export const onCreateChat = /* GraphQL */ `
+  subscription OnCreateChat(
+    $filter: ModelSubscriptionChatFilterInput
     $owner: String
   ) {
-    onCreateUser(filter: $filter, owner: $owner) {
+    onCreateChat(filter: $filter, owner: $owner) {
       id
-      email
-      image
+      messages
       createdAt
       updatedAt
       _version
@@ -20,15 +19,14 @@ export const onCreateUser = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateUser = /* GraphQL */ `
-  subscription OnUpdateUser(
-    $filter: ModelSubscriptionUserFilterInput
+export const onUpdateChat = /* GraphQL */ `
+  subscription OnUpdateChat(
+    $filter: ModelSubscriptionChatFilterInput
     $owner: String
   ) {
-    onUpdateUser(filter: $filter, owner: $owner) {
+    onUpdateChat(filter: $filter, owner: $owner) {
       id
-      email
-      image
+      messages
       createdAt
       updatedAt
       _version
@@ -38,108 +36,20 @@ export const onUpdateUser = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteUser = /* GraphQL */ `
-  subscription OnDeleteUser(
-    $filter: ModelSubscriptionUserFilterInput
+export const onDeleteChat = /* GraphQL */ `
+  subscription OnDeleteChat(
+    $filter: ModelSubscriptionChatFilterInput
     $owner: String
   ) {
-    onDeleteUser(filter: $filter, owner: $owner) {
+    onDeleteChat(filter: $filter, owner: $owner) {
       id
-      email
-      image
+      messages
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
       owner
-    }
-  }
-`;
-export const onCreateIdea = /* GraphQL */ `
-  subscription OnCreateIdea(
-    $filter: ModelSubscriptionIdeaFilterInput
-    $owner: String
-  ) {
-    onCreateIdea(filter: $filter, owner: $owner) {
-      id
-      content
-      owner
-      user {
-        id
-        email
-        image
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        owner
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      ideaUserId
-    }
-  }
-`;
-export const onUpdateIdea = /* GraphQL */ `
-  subscription OnUpdateIdea(
-    $filter: ModelSubscriptionIdeaFilterInput
-    $owner: String
-  ) {
-    onUpdateIdea(filter: $filter, owner: $owner) {
-      id
-      content
-      owner
-      user {
-        id
-        email
-        image
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        owner
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      ideaUserId
-    }
-  }
-`;
-export const onDeleteIdea = /* GraphQL */ `
-  subscription OnDeleteIdea(
-    $filter: ModelSubscriptionIdeaFilterInput
-    $owner: String
-  ) {
-    onDeleteIdea(filter: $filter, owner: $owner) {
-      id
-      content
-      owner
-      user {
-        id
-        email
-        image
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        owner
-      }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      ideaUserId
     }
   }
 `;

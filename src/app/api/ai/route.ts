@@ -1,38 +1,38 @@
+import { Configuration, OpenAIApi } from "openai";
 import { NextResponse } from "next/server";
 
-const OPENAI_BASE_URL = process.env.OPENAI_BASE_URL;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_MODEL = process.env.OPENAI_MODEL;
-const URL = `${OPENAI_BASE_URL}/completions`;
+
+const configuration = new Configuration({
+  apiKey: OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
 
 export async function POST(req: Request) {
   try {
-    const res = await req.json();
-    const prompt = res.data;
+    if (!OPENAI_MODEL) {
+      throw new Error("Cannot connect to server.");
+    }
 
-    const payload = {
+    const res = await req.json();
+
+    const completion = await openai.createChatCompletion({
       model: OPENAI_MODEL,
-      prompt,
+      messages: JSON.parse(res.data),
       temperature: 0.7,
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0,
       max_tokens: 200,
       n: 1,
-    };
-
-    const response = await fetch(URL, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-      },
-      method: "POST",
-      body: JSON.stringify(payload),
     });
 
-    const json = await response.json();
-    return NextResponse.json({ json });
+    const response = completion?.data?.choices?.[0]?.message || "";
+
+    return NextResponse.json({ response });
   } catch (error) {
+    console.log("error", error);
     NextResponse.json({
       json: {
         error: "Something went wrong",

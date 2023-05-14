@@ -24,19 +24,15 @@ export default function IdeaCreateForm(props) {
   } = props;
   const initialValues = {
     content: "",
-    owner: "",
   };
   const [content, setContent] = React.useState(initialValues.content);
-  const [owner, setOwner] = React.useState(initialValues.owner);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setContent(initialValues.content);
-    setOwner(initialValues.owner);
     setErrors({});
   };
   const validations = {
     content: [{ type: "Required" }],
-    owner: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -65,7 +61,6 @@ export default function IdeaCreateForm(props) {
         event.preventDefault();
         let modelFields = {
           content,
-          owner,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -121,7 +116,6 @@ export default function IdeaCreateForm(props) {
           if (onChange) {
             const modelFields = {
               content: value,
-              owner,
             };
             const result = onChange(modelFields);
             value = result?.content ?? value;
@@ -135,31 +129,6 @@ export default function IdeaCreateForm(props) {
         errorMessage={errors.content?.errorMessage}
         hasError={errors.content?.hasError}
         {...getOverrideProps(overrides, "content")}
-      ></TextField>
-      <TextField
-        label="Owner"
-        isRequired={false}
-        isReadOnly={false}
-        value={owner}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              content,
-              owner: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.owner ?? value;
-          }
-          if (errors.owner?.hasError) {
-            runValidationTasks("owner", value);
-          }
-          setOwner(value);
-        }}
-        onBlur={() => runValidationTasks("owner", owner)}
-        errorMessage={errors.owner?.errorMessage}
-        hasError={errors.owner?.hasError}
-        {...getOverrideProps(overrides, "owner")}
       ></TextField>
       <Flex
         justifyContent="space-between"
