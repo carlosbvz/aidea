@@ -7,6 +7,7 @@ import AiService from "@/services/AiService";
 import ErrorType from "@models/Error";
 import AuthService from "@/services/AuthService";
 import { DataStore } from "@aws-amplify/datastore";
+import { Chat } from "../../models";
 import AideaSideBar from "@organisms/AideaSideBar";
 import MessageItem, { MessageType } from "@atoms/MessageItem";
 
@@ -99,13 +100,16 @@ function AideaPanel() {
         content: userInput,
       };
       const messages: MessageType[] = [...chat, message];
-      console.log("initial messages", messages);
+      setChat(messages);
       const answer = await contactAI(JSON.stringify(messages));
-      console.log("answer", answer);
       const messagesWithAnswer = [...messages, answer];
       setChat(messagesWithAnswer);
-
-      // TODO: Store data in DB
+      const record = await DataStore.save(
+        new Chat({
+          messages: userInput,
+        })
+      );
+      console.log("record", record);
     } catch (error) {
       console.error(error);
     } finally {

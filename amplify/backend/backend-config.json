@@ -1,39 +1,5 @@
 {
-  "api": {
-    "aidea": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "aidea8dd9dd6b"
-        }
-      ],
-      "output": {
-        "authConfig": {
-          "additionalAuthenticationProviders": [
-            {
-              "apiKeyConfig": {
-                "apiKeyExpirationDate": "2024-04-29T23:42:54.106Z",
-                "apiKeyExpirationDays": 365,
-                "description": "aidea-api-key"
-              },
-              "authenticationType": "API_KEY"
-            }
-          ],
-          "defaultAuthentication": {
-            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-            "userPoolConfig": {
-              "userPoolId": "authaidea8dd9dd6b"
-            }
-          }
-        }
-      },
-      "providerPlugin": "awscloudformation",
-      "service": "AppSync"
-    }
-  },
+  "api": {},
   "auth": {
     "aidea8dd9dd6b": {
       "customAuth": false,
