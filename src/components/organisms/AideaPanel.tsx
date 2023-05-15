@@ -109,7 +109,6 @@ function AideaPanel() {
           messages: userInput,
         })
       );
-      console.log("record", record);
     } catch (error) {
       console.error(error);
     } finally {
