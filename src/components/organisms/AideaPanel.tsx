@@ -6,88 +6,100 @@ import { useState } from "react";
 import AiService from "@/services/AiService";
 import ErrorType from "@models/Error";
 import AuthService from "@/services/AuthService";
-import { DataStore } from "@aws-amplify/datastore";
-import { Chat } from "../../models";
-import AideaSideBar from "@organisms/AideaSideBar";
+import AideaSideBar from "@/components/organisms/sideBar/sideBar";
 import MessageItem, { MessageType } from "@atoms/MessageItem";
+import { evaMessages } from "@utils/messages";
+
+import { API } from "aws-amplify";
+import * as queries from "../../graphql/queries";
+import * as mutations from "../../graphql/mutations";
+import { GraphQLQuery } from "@aws-amplify/api";
+import {
+  CreateChatInput,
+  CreateChatMutation,
+  ListChatsQuery,
+  UpdateChatInput,
+  UpdateChatMutation,
+} from "../../API";
+import { initialize } from "next/dist/server/lib/render-server";
 
 const authService = new AuthService();
-
 const AI_API_URL = process.env.NEXT_PUBLIC_AI_API_URL || "";
 const aiService = new AiService(AI_API_URL, ErrorType);
-
 const contactAI = async (prompt: string) => {
   const response = await aiService.getAiResponse(prompt);
   return response;
 };
+const loadInitialData = async () => {
+  const promises = [
+    authService.getUser(),
+    API.graphql<GraphQLQuery<ListChatsQuery>>({
+      query: queries.listChats,
+    }),
+  ];
 
-const messages: MessageType[] = [
-  {
-    role: "system",
-    content: `
-      You are an business assistant for a small business owner.
-      You are responsible for helping brainstorm and validate new business ideas for your human partner.
-      You will have to ask questions to your human partner in order to:
-      1. Understand their business idea.
-      2. Validate their business idea.
-      3. Provide feedback on their business idea.
+  const [loadedUser, chatsData] = await Promise.all(promises);
+  const chatsItems = chatsData?.data?.listChats?.items;
+  const areThereChats = chatsItems?.length > 0;
 
-      Make sure your validation process is based on the following criteria:
-      1. Is the business idea feasible?
-      2. Is the business idea profitable?
-      3. Is the business idea scalable?
-      4. Is the business idea sustainable?
-      5. Is the business idea ethical?
-      6. Is the business idea legal?
-      7. Is the business idea innovative?
-      8. Is the business idea unique?
-      9. Is the business idea solving a problem?
-      10. Is the business idea solving a problem that is worth solving?
-      11. Is the business idea solving a problem that is worth solving now?
-      12. Is the business idea solving a problem that is worth solving now and in the future?
-      
+  let chats;
+  let activeChat;
 
-      Also, make sure you base the asking process on the book "The Lean Startup" by Eric Ries.
+  // Existing Chats
+  if (areThereChats) {
+    chats = chatsItems.map((chat: any) => {
+      const messages = JSON.parse(chat.messages);
+      return {
+        ...chat,
+        messages,
+      };
+    });
+    // New Chat
+  } else {
+    activeChat = {
+      messages: evaMessages,
+    };
+  }
 
-      `,
-  },
-  {
-    role: "user",
-    content: "I want to start a new business.",
-  },
-];
+  return { chats, activeChat };
+};
+const createNewChat = async (messages: MessageType[]) => {
+  const chatDetails: CreateChatInput = {
+    messages: JSON.stringify(messages),
+  };
+
+  const newChat = await API.graphql<GraphQLQuery<CreateChatMutation>>({
+    query: mutations.createChat,
+    variables: { input: chatDetails },
+  });
+
+  return newChat?.data?.createChat;
+};
 
 function AideaPanel() {
-  const [data, setData] = useState<any>([]);
-  const [chat, setChat] = useState<any>(messages);
+  const [chats, setChats] = useState<any>([]);
+  const [activeChat, setActiveChat] = useState<any>([]);
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [botInstructions, setBotInstructions] = useState<string>(
+    evaMessages[0].content
+  );
 
   // Loading Data
   useEffect(() => {
-    // const fetchData = async () => {
-    //   const promises = [authService.getUser(), DataStore.query(Idea)];
-    //   const [loadedUser, ideas] = await Promise.all(promises);
-    //   // Ordering data, and making first item active
-    //   const ideasData = ideas
-    //     // .filter((idea: any) => idea.owner === loadedUser.attributes.sub)
-    //     .reverse()
-    //     .map((idea: any, index: number) => {
-    //       const content = JSON.parse(idea.content);
-    //       const isActive = index === 0 ? true : false;
-    //       if (isActive) setDisplayData(content);
-    //       return {
-    //         id: idea.id,
-    //         question: content.question,
-    //         answer: content.answer,
-    //         isActive,
-    //       };
-    //     });
-    //   setData(ideasData);
-    //   setUser(loadedUser);
-    // };
-    // fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const initialize = async () => {
+      try {
+        setIsLoading(true);
+        const { chats, activeChat } = await loadInitialData();
+        setChats(chats);
+        setActiveChat(activeChat);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    initialize();
   }, []);
 
   // Fetching Data
@@ -95,20 +107,41 @@ function AideaPanel() {
     try {
       setIsLoading(true);
 
-      const message: MessageType = {
+      const allMessages = [...activeChat.messages];
+      const userMessage: MessageType = {
         role: "user",
         content: userInput,
       };
-      const messages: MessageType[] = [...chat, message];
-      setChat(messages);
-      const answer = await contactAI(JSON.stringify(messages));
-      const messagesWithAnswer = [...messages, answer];
-      setChat(messagesWithAnswer);
-      const record = await DataStore.save(
-        new Chat({
-          messages: userInput,
-        })
-      );
+      const messagesWithUserMessage: MessageType[] = [
+        ...allMessages,
+        userMessage,
+      ];
+
+      // Update UI with user's message
+      setActiveChat({
+        ...activeChat,
+        messages: messagesWithUserMessage,
+      });
+
+      // Get AI's response
+      const answer = await contactAI(JSON.stringify(messagesWithUserMessage));
+      const messagesWithAnswer = [...messagesWithUserMessage, answer];
+
+      setActiveChat({
+        ...activeChat,
+        messages: messagesWithAnswer,
+      });
+
+      // const chatDetails: UpdateChatInput = {
+      //   id: activeChat.id,
+      //   _version: activeChat._version,
+      //   messages: JSON.stringify(messagesWithAnswer),
+      // };
+
+      // const updatedChat = await API.graphql<GraphQLQuery<UpdateChatMutation>>({
+      //   query: mutations.updateChat,
+      //   variables: { input: chatDetails },
+      // });
     } catch (error) {
       console.error(error);
     } finally {
@@ -117,32 +150,46 @@ function AideaPanel() {
   };
 
   const handleOnItemChange = (item: any) => {
-    setData((prev: any) => {
-      const updatedContent = prev.map((prevItem: any) => {
-        prevItem.isActive = prevItem.id === item.id;
-        return prevItem;
-      });
-      return updatedContent;
-    });
-    setChat(item);
+    console.log("Item: ", item);
+  };
+
+  const handleOnBotDescriptionChange = (event: any) => {
+    const text = event.target.value;
+    setBotInstructions(text);
+    activeChat.messages[0].content = text;
+    setActiveChat(activeChat);
   };
 
   return (
     <div>
       <div className="grid grid-cols-5 gap-4">
         <div className="col-span-1 ">
-          <AideaSideBar data={data} onChange={handleOnItemChange} />
+          {/* <button
+            className={`bg-green-800 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg focus:outline-none focus:shadow-outline mt-2 disabled:opacity-50 disabled:cursor-not-allowed `}
+          >
+            New
+          </button> */}
+          {/* <AideaSideBar data={activeChat} onChange={handleOnItemChange} /> */}
+          <p>Bot requirements:</p>
+          <textarea
+            className="form-input rounded-lg px-3 py-2 resize-none h-auto  dark:bg-gray-600 bg-gray-600"
+            name="title"
+            value={botInstructions}
+            onChange={handleOnBotDescriptionChange}
+            cols={30}
+            rows={30}
+          />
         </div>
-        <div className="col-span-4">
+        <div className="col-span-4 mb-4">
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              height: "90vh",
+              height: "80vh",
               justifyContent: "space-between",
             }}
           >
-            {chat.map((item: any, index: number) => (
+            {activeChat?.messages?.map?.((item: any, index: number) => (
               <div
                 key={index}
                 className={`flex flex-col ${

@@ -2,11 +2,12 @@ import React from "react";
 import SideBarItem from "@atoms/SideBarItem";
 
 type ItemType = {
-  question: string;
+  text: string;
   isActive?: boolean;
 };
+type DataType = ItemType[];
 type Props = {
-  data: any;
+  data: DataType;
   onChange?: (item: any) => void;
 };
 
@@ -15,6 +16,8 @@ export default function AideaSideBar({ data, onChange }: Props) {
     onChange?.(item);
   };
 
+  // console.log("data", data);
+
   return (
     <div
       style={{
@@ -22,11 +25,13 @@ export default function AideaSideBar({ data, onChange }: Props) {
         overflow: "scroll",
       }}
     >
-      {data.map((item: ItemType, index: number) => (
+      {data?.map?.((item: ItemType, index: number) => (
         <div key={index} onClick={() => handleOnChange(item)}>
-          <SideBarItem text={item.question} isActive={item.isActive} />
+          <SideBarItem text={item.text} isActive={item.isActive} />
         </div>
       ))}
     </div>
   );
 }
+
+export type { DataType };

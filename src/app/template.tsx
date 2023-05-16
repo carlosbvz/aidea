@@ -12,9 +12,7 @@ function Template({ children }: { children: React.ReactElement }) {
   return (
     <>
       <Nav />
-      <div className="container max-w-screen-xxl mx-auto px-4 my-8">
-        {children}
-      </div>
+      <div className=" px-4 my-8">{children}</div>
     </>
   );
 }

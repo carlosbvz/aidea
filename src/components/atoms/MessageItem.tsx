@@ -9,7 +9,7 @@ export default function MessageItem({ role, content }: MessageType) {
   return (
     <div
       className={`rounded-lg shadow-md p-6 mb-4 ${
-        role === "user" ? "bg-green-800 text-white" : "bg-gray-900 text-white"
+        role === "user" ? "bg-green-800 text-white" : "bg-gray-700 text-white"
       }`}
     >
       {content}

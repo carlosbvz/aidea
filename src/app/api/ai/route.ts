@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     const completion = await openai.createChatCompletion({
       model: OPENAI_MODEL,
       messages: JSON.parse(res.data),
-      temperature: 0.4,
+      temperature: 1,
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0,
@@ -32,6 +32,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ response });
   } catch (error) {
+    console.log("error", error);
     NextResponse.json({
       json: {
         error: "Something went wrong",
